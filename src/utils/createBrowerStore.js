@@ -1,12 +1,16 @@
 import { ipcMain } from 'electron';
 import { createStore } from 'redux';
 
-export default function createBrowerStore(reducer, initialState, enhancer) {
+export default function createBrowerStore(...args) {
+  const store = createStore(...args);
 
-  let store = createStore(reducer, initialState, enhancer);
-
+  /**
+   * List of renderer webContents.
+   * @var array
+   */
   let clients = [];
 
+  // Register renderer which created by 'configureRendererStore'.
   ipcMain.on('renderer-register', (event) => {
     let { sender } = event;
 
@@ -17,15 +21,14 @@ export default function createBrowerStore(reducer, initialState, enhancer) {
     sender.send('update-state', store.getState());
   });
 
+  // Handle renderer dispatch, get new state, and broadcast to clients.
   ipcMain.on('renderer-dispatch', (event, action) => {
     let prevState = store.getState();
-
     store.dispatch(action);
-
     let newState = store.getState();
 
     if ( ! newState) {
-      throw 'Reducer does not return any state, please check out your reducer.'
+      throw 'Reducer does not return anything, please check out your reducer.'
     }
 
     clients.forEach((webContents) => {

@@ -2,12 +2,11 @@ import { ipcRenderer } from 'electron';
 import { createStore } from 'redux';
 
 export default function configureRendererStore(enhancer) {
-
-  let reducer = (state = {}, action) => {
+  const reducer = (state = {}, action) => {
     return action.nextState || state;
   };
 
-  let store = createStore(reducer, undefined, enhancer);
+  const store = createStore(reducer, enhancer);
 
   store._dispatch = store.dispatch;
   store.dispatch = (action) => {
