@@ -1,44 +1,44 @@
 import makeLogs, { Decorated } from './makeLogs';
 
 export default function createCommandLineLogger(logger = console) {
-	return store => next => action => {
-		const prevState = store.getState();
-		const handled = next(action);
-		const nextState = store.getState();
+  return store => next => action => {
+    const prevState = store.getState();
+    const handled = next(action);
+    const nextState = store.getState();
 
-		// Handle logs.
-		let logBuffer = makeLogs(action, prevState, nextState);
+    // Handle logs.
+    let logBuffer = makeLogs(action, prevState, nextState);
 
-		logBuffer.forEach((row) => {
-			// handle row before print.
-			row = row.reduce((container, part, index) => {
-				if (part instanceof Decorated) {
-					container.push(decorate(part.text, part.style));
-					return container;
-				}
+    logBuffer.forEach((row) => {
+      // handle row before print.
+      row = row.reduce((container, part, index) => {
+        if (part instanceof Decorated) {
+          container.push(decorate(part.text, part.style));
+          return container;
+        }
 
-				container.push(part);
-				return container;
-			}, []);
+        container.push(part);
+        return container;
+      }, []);
 
-			logger.log(...row);
-		});
+      logger.log(...row);
+    });
 
-		return handled;
-	};
+    return handled;
+  };
 }
 
 function decorate(text, styleType) {
-	let style = styles[styleType] || 'reset';
-	style = commandLineStyles[style];
-	return `\x1b[${style[0]}m${text}\x1b[${style[1]}m`;
+  let style = styles[styleType] || 'reset';
+  style = commandLineStyles[style];
+  return `\x1b[${style[0]}m${text}\x1b[${style[1]}m`;
 }
 
 const styles = {
-	title: 'bold',
-	action: 'blue',
-	prev: 'red',
-	next: 'green'
+  title: 'bold',
+  action: 'blue',
+  prev: 'red',
+  next: 'green'
 }
 
 const commandLineStyles = {

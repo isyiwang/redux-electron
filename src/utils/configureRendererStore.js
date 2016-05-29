@@ -12,7 +12,7 @@ export default function configureRendererStore(enhancer) {
   store._dispatch = store.dispatch;
   store.dispatch = (action) => {
     if (action) {
-			ipcRenderer.send('renderer-dispatch', action);
+      ipcRenderer.send('renderer-dispatch', action);
     }
   };
 
@@ -20,7 +20,7 @@ export default function configureRendererStore(enhancer) {
     store._dispatch({ type: '', nextState, prevState, dispatched });
   });
 
-	ipcRenderer.send('renderer-register');
+  ipcRenderer.send('renderer-register');
 
   return store;
 }

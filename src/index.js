@@ -5,11 +5,11 @@ import createRendererLogger from './utils/createRendererLogger';
 
 var storeEnhancer = null;
 var createLogger = (process.type === 'browser')
-	? createCommandLineLogger
-	: createRendererLogger;
+  ? createCommandLineLogger
+  : createRendererLogger;
 
 module.exports = {
   createBrowerStore,
   configureRendererStore,
-	createLogger
+  createLogger
 };

@@ -5,32 +5,32 @@ export default function createBrowerStore(reducer, initialState, enhancer) {
 
   let store = createStore(reducer, initialState, enhancer);
 
-	let clients = [];
+  let clients = [];
 
-	ipcMain.on('renderer-register', (event) => {
-		let { sender } = event;
+  ipcMain.on('renderer-register', (event) => {
+    let { sender } = event;
 
-		if (0 > clients.indexOf(sender)) {
-			clients.push(sender);
-		}
+    if (0 > clients.indexOf(sender)) {
+      clients.push(sender);
+    }
 
-		sender.send('update-state', store.getState());
-	});
+    sender.send('update-state', store.getState());
+  });
 
   ipcMain.on('renderer-dispatch', (event, action) => {
-		let prevState = store.getState();
+    let prevState = store.getState();
 
     store.dispatch(action);
 
     let newState = store.getState();
 
-		if ( ! newState) {
-			throw 'Reducer does not return any state, please check out your reducer.'
-		}
+    if ( ! newState) {
+      throw 'Reducer does not return any state, please check out your reducer.'
+    }
 
-		clients.forEach((webContents) => {
-			webContents.send('update-state', newState, prevState, action);
-		});
+    clients.forEach((webContents) => {
+      webContents.send('update-state', newState, prevState, action);
+    });
   });
 
   return store;
