@@ -2,6 +2,11 @@ import { ipcRenderer } from 'electron';
 import { createStore } from 'redux';
 
 export default function createRendererStore(enhancer) {
+  if (process.type === 'browser') {
+    throw 'createRendererStore only available in the renderer process.';
+  }
+
+  // register this renderer process and get initial state.
   let initialState = ipcRenderer.sendSync('renderer-register');
 
   // pseudo-reducer

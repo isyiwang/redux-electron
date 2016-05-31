@@ -5,18 +5,18 @@
 npm install redux-electron
 ```
 ## Usage
-#### Main Process / Browser
+#### Main Process
 ```javascript
 import { applyMiddleware, compose } from 'redux';
-import { createBrowerStore } from 'redux-electron';
+import { createMainStore } from 'redux-electron';
 
 let enhancer = compose(
   applyMiddleware(...middlewares)
 );
 
-const store = createBrowerStore(rootReducer, enhancer);
+const store = createMainStore(rootReducer, enhancer);
 ```
-#### View / Renderer
+#### Window / Renderer
 ```javascript
 import { applyMiddleware, compose } from 'redux';
 import createLogger from 'redux-logger';

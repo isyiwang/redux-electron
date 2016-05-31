@@ -1,7 +1,11 @@
 import { ipcMain } from 'electron';
 import { createStore } from 'redux';
 
-export default function createBrowerStore(...args) {
+export default function createMainStore(...args) {
+  if (process.type !== 'browser') {
+    throw 'createMainStore only available in the main process.';
+  }
+
   const store = createStore(...args);
 
   // List of renderer webContents.
@@ -17,7 +21,7 @@ export default function createBrowerStore(...args) {
     event.returnValue = store.getState();
   });
 
-  // Handle renderer dispatch, get new state, and broadcast to clients.
+  // Handle renderer dispatching, get new state, and broadcast to clients.
   ipcMain.on('renderer-dispatch', (event, action) => {
     let prevState = store.getState();
     store.dispatch(action);
