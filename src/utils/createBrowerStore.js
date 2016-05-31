@@ -4,13 +4,9 @@ import { createStore } from 'redux';
 export default function createBrowerStore(...args) {
   const store = createStore(...args);
 
-  /**
-   * List of renderer webContents.
-   * @var array
-   */
+  // List of renderer webContents.
   let clients = [];
 
-  // Register renderer which created by 'configureRendererStore'.
   ipcMain.on('renderer-register', (event) => {
     let { sender } = event;
 
@@ -18,7 +14,7 @@ export default function createBrowerStore(...args) {
       clients.push(sender);
     }
 
-    sender.send('update-state', store.getState());
+    event.returnValue = store.getState();
   });
 
   // Handle renderer dispatch, get new state, and broadcast to clients.
@@ -27,13 +23,11 @@ export default function createBrowerStore(...args) {
     store.dispatch(action);
     let newState = store.getState();
 
-    if ( ! newState) {
-      throw 'Reducer does not return anything, please check out your reducer.'
+    if (typeof newState === 'object') {
+      clients.forEach((webContents) => {
+        webContents.send('update-state', action, newState);
+      });
     }
-
-    clients.forEach((webContents) => {
-      webContents.send('update-state', newState, prevState, action);
-    });
   });
 
   return store;

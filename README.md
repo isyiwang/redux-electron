@@ -8,12 +8,22 @@ npm install redux-electron
 #### Main Process / Browser
 ```javascript
 import { applyMiddleware, compose } from 'redux';
-import { createBrowerStore, createLogger } from 'redux-electron';
+import { createBrowerStore } from 'redux-electron';
 
-const loggerMiddleware = createLogger();
+let enhancer = compose(
+  applyMiddleware(...middlewares)
+);
+
+const store = createBrowerStore(rootReducer, enhancer);
+```
+#### View / Renderer
+```javascript
+import { applyMiddleware, compose } from 'redux';
+import createLogger from 'redux-logger';
+import { createRendererStore } from 'redux-electron';
 
 let middlewares = [
-  loggerMiddleware,
+  createLogger(),
   ...
 ];
 
@@ -21,18 +31,7 @@ let enhancer = compose(
   applyMiddleware(...middlewares)
 );
 
-let store = createBrowerStore(rootReducer, enhancer);
-```
-#### View Process / Renderer
-```javascript
-import { applyMiddleware, compose } from 'redux';
-import { configureRendererStore, createLogger } from 'redux-electron';
-
-let enhancer = compose(
-  applyMiddleware(createLogger())
-);
-
-const store = configureRendererStore(enhancer);
+const store = createRendererStore(enhancer);
 
 ReactDOM.render((
   <Provider store={store}>

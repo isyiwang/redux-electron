@@ -2,15 +2,11 @@ import makeLogs, { Decorated } from './makeLogs';
 
 export default function createRendererLogger(logger = console) {
   return store => next => action => {
+    const prevState = store.getState();
     const handled = next(action);
+    const nextState = store.getState();
 
-    // Handle logs.
-    let { dispatched, prevState, nextState } = action;
-    if ( ! dispatched) {
-      return handled;
-    }
-
-    let logBuffer = makeLogs(dispatched, prevState, nextState);
+    let logBuffer = makeLogs(action, prevState, nextState);
 
     logBuffer.forEach((row) => {
       // handle row before print.

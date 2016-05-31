@@ -1,5 +1,5 @@
 import createBrowerStore from './utils/createBrowerStore';
-import configureRendererStore from './utils/configureRendererStore';
+import createRendererStore from './utils/createRendererStore';
 import createCommandLineLogger from './utils/createCommandLineLogger';
 import createRendererLogger from './utils/createRendererLogger';
 
@@ -10,6 +10,6 @@ var createLogger = (process.type === 'browser')
 
 module.exports = {
   createBrowerStore,
-  configureRendererStore,
+  createRendererStore,
   createLogger
 };
