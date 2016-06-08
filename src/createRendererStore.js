@@ -10,10 +10,10 @@ export default function createRendererStore(enhancer) {
   let initialState = ipcRenderer.sendSync('renderer-register');
 
   // pseudo-reducer
-  let ref = {};
+  let currectUpdated;
   const reducer = (state = initialState, action) => {
-    if (ref.updatedState) {
-      return Object.assign({}, state, ref.updatedState);
+    if (currectUpdated) {
+      return Object.assign({}, state, currectUpdated);
     }
 
     return state;
@@ -27,7 +27,7 @@ export default function createRendererStore(enhancer) {
   };
 
   ipcRenderer.on('update-state', (event, dispatchedAction, updatedState) => {
-    ref.updatedState = updatedState;
+    currectUpdated = updatedState;
     store._dispatch(dispatchedAction);
   });
 
