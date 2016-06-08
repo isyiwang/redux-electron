@@ -1,9 +1,10 @@
 import { ipcMain } from 'electron';
 import { createStore } from 'redux';
+import objectUpdated from './utils/objectUpdated';
 
 export default function createMainStore(...args) {
   if (process.type !== 'browser') {
-    throw 'createMainStore only available in the main process.';
+    throw new Error('createMainStore only available in the main process.');
   }
 
   const store = createStore(...args);
@@ -26,12 +27,11 @@ export default function createMainStore(...args) {
     let prevState = store.getState();
     store.dispatch(action);
     let newState = store.getState();
+    let updated = objectUpdated(prevState, newState);
 
-    if (typeof newState === 'object') {
-      clients.forEach((webContents) => {
-        webContents.send('update-state', action, newState);
-      });
-    }
+    clients.forEach((webContents) => {
+      webContents.send('update-state', action, updated);
+    });
   });
 
   return store;

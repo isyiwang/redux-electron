@@ -1,5 +1,5 @@
-import createMainStore from './utils/createMainStore';
-import createRendererStore from './utils/createRendererStore';
+import createMainStore from './createMainStore';
+import createRendererStore from './createRendererStore';
 
 module.exports = {
   createMainStore,

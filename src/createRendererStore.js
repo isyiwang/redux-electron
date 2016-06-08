@@ -3,16 +3,20 @@ import { createStore } from 'redux';
 
 export default function createRendererStore(enhancer) {
   if (process.type === 'browser') {
-    throw 'createRendererStore only available in the renderer process.';
+    throw new Error('createRendererStore only available in the renderer process.');
   }
 
   // register this renderer process and get initial state.
   let initialState = ipcRenderer.sendSync('renderer-register');
 
   // pseudo-reducer
-  let pointer = {};
+  let ref = {};
   const reducer = (state = initialState, action) => {
-    return pointer.nextState || state;
+    if (ref.updatedState) {
+      return Object.assign({}, state, ref.updatedState);
+    }
+
+    return state;
   };
 
   const store = createStore(reducer, enhancer);
@@ -22,8 +26,8 @@ export default function createRendererStore(enhancer) {
     (action) && ipcRenderer.send('renderer-dispatch', action);
   };
 
-  ipcRenderer.on('update-state', (event, dispatchedAction, nextState) => {
-    pointer.nextState = nextState;
+  ipcRenderer.on('update-state', (event, dispatchedAction, updatedState) => {
+    ref.updatedState = updatedState;
     store._dispatch(dispatchedAction);
   });
 
