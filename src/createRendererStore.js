@@ -1,4 +1,4 @@
-import { ipcRenderer } from 'electron';
+const { ipcRenderer } = window.require('electron');
 import { createStore } from 'redux';
 
 export default function createRendererStore(enhancer) {
