@@ -1,6 +1,6 @@
 {
   "name": "redux-electron",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
@@ -8,18 +8,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Shishamou/redux-electron.git"
+    "url": "git+https://github.com/isyiwang/redux-electron.git"
   },
   "keywords": [
     "redux",
     "electron"
   ],
-  "author": "Shisha",
+  "author": "isyiwang",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Shishamou/redux-electron/issues"
+    "url": "https://github.com/isyiwang/redux-electron/issues"
   },
-  "homepage": "https://github.com/Shishamou/redux-electron#readme",
+  "homepage": "https://github.com/isyiwang/redux-electron#readme",
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-preset-es2015": "^6.9.0"
